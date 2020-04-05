@@ -13,6 +13,8 @@ run_tests();
 __DATA__
 
 === TEST 1: the "substitution" command with default types
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 --- config
     location / {
         subs_filter 'tom' 'yaoweibin' ir;
@@ -26,6 +28,8 @@ tom and jerry
 --- response_body_unlike: ^(.*)tom(.*)$
 
 === TEST 2: the "substitution" command with css types
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 --- config
     location / {
         subs_filter_types text/css;
@@ -40,6 +44,8 @@ tom and jerry
 --- response_body_like: ^(.*)tom(.*)$
 
 === TEST 3: the "substitution" command with xml types
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 --- config
     types {
         text/html html;

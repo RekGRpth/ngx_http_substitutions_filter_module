@@ -13,6 +13,8 @@ run_tests();
 __DATA__
 
 === TEST 1: the "substitution" command with build-in variable matching
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 --- config
     location / {
         subs_filter_types text/plain;
@@ -26,6 +28,8 @@ http://localhost
 --- response_body_like: ^https://localhost$
 
 === TEST 2: the "substitution" command with custom variable matching
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 --- config
     location / {
         set $foo foo;
@@ -40,6 +44,8 @@ barfoobar
 --- response_body_like: ^(bar){3}$
 
 === TEST 3: the "substitution" command with insensitive matching
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 --- config
     location / {
         subs_filter_types text/plain;

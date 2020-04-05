@@ -15,6 +15,9 @@ run_tests();
 __DATA__
 
 === TEST 1: the "regex substitution" command
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {
@@ -33,6 +36,9 @@ __DATA__
 --- response_body_unlike: ^(.*)taobao.com(.*)$
 
 === TEST 2: the "subs_filter_bypass" directive, one variable
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {
@@ -52,6 +58,9 @@ __DATA__
 --- response_body_like: ^(.*)taobao.com(.*)$
 
 === TEST 3: the "subs_filter_bypass" directive, two variables
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {
@@ -72,6 +81,9 @@ __DATA__
 --- response_body_like: ^(.*)taobao.com(.*)$
 
 === TEST 4: the "subs_filter_bypass" directive, raw string
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {
@@ -90,6 +102,9 @@ __DATA__
 --- response_body_like: ^(.*)taobao.com(.*)$
 
 === TEST 5: the "subs_filter_bypass" directive, raw string
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {

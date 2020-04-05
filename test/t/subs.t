@@ -15,6 +15,9 @@ __DATA__
 
 === TEST 1: the "substitution" command
 
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {
@@ -32,6 +35,9 @@ __DATA__
 --- response_body_unlike: ^(.*)taobao\.com(.*)$
 
 === TEST 2: the "substitution" command with gzip
+
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 
 --- http_config
 
@@ -55,6 +61,9 @@ Accept-Encoding:gzip;
 
 === TEST 3: the "substitution" command with large line
 
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {
@@ -74,6 +83,9 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 --- response_body_like: ^[b ]+$
 
 === TEST 4: the "substitution" command with large line
+
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 
 --- http_config
 
@@ -95,6 +107,9 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 === TEST 5: the "substitution" command with large line
 
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
+
 --- http_config
 
     upstream backends {
@@ -115,6 +130,9 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 --- response_body_like: ^[b ]+$
 
 === TEST 6: the "substitution" command with large line
+
+--- main_config
+    load_module /etc/nginx/modules/ngx_http_subs_filter_module.so;
 
 --- http_config
 
