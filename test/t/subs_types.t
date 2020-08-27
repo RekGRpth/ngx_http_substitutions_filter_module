@@ -3,7 +3,7 @@
 use lib 'lib';
 use Test::Nginx::LWP;
 
-plan tests => repeat_each() * 2 * blocks();
+plan tests => repeat_each() * 2 * blocks() - 2;
 no_root_location();
 
 #no_diff;
