@@ -63,6 +63,11 @@ typedef struct {
 
 
 typedef struct {
+    ngx_flag_t enable;
+} ngx_http_subs_main_conf_t;
+
+
+typedef struct {
     ngx_array_t   *sub_pairs;  /* array of sub_pair_t */
 
     ngx_chain_t   *in;
@@ -122,8 +127,9 @@ static ngx_int_t ngx_http_subs_filter_regex_compile(sub_pair_t *pair,
     ngx_http_script_compile_t *sc, ngx_conf_t *cf);
 
 
-static void *ngx_http_subs_create_conf(ngx_conf_t *cf);
-static char *ngx_http_subs_merge_conf(ngx_conf_t *cf, void *parent,
+static void *ngx_http_subs_create_main_conf(ngx_conf_t *cf);
+static void *ngx_http_subs_create_loc_conf(ngx_conf_t *cf);
+static char *ngx_http_subs_merge_loc_conf(ngx_conf_t *cf, void *parent,
     void *child);
 
 static ngx_int_t ngx_http_subs_filter_init(ngx_conf_t *cf);
@@ -178,14 +184,14 @@ static ngx_http_module_t  ngx_http_subs_filter_module_ctx = {
     NULL,                                  /* preconfiguration */
     ngx_http_subs_filter_init,             /* postconfiguration */
 
-    NULL,                                  /* create main configuration */
+    ngx_http_subs_create_main_conf,        /* create main configuration */
     NULL,                                  /* init main configuration */
 
     NULL,                                  /* create server configuration */
     NULL,                                  /* merge server configuration */
 
-    ngx_http_subs_create_conf,             /* create location configuration */
-    ngx_http_subs_merge_conf               /* merge location configuration */
+    ngx_http_subs_create_loc_conf,         /* create location configuration */
+    ngx_http_subs_merge_loc_conf           /* merge location configuration */
 };
 
 
@@ -1167,6 +1173,9 @@ ngx_http_subs_filter( ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         }
     }
 
+    ngx_http_subs_main_conf_t *main = ngx_http_conf_get_module_main_conf(cf, ngx_http_subs_filter_module);
+    main->enable = 1;
+
     return NGX_CONF_OK;
 }
 
@@ -1266,13 +1275,27 @@ ngx_http_subs_regex_capture_count(ngx_regex_t *re)
 
 
 static void *
-ngx_http_subs_create_conf(ngx_conf_t *cf)
+ngx_http_subs_create_main_conf(ngx_conf_t *cf)
+{
+    ngx_http_subs_main_conf_t  *conf;
+
+    conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_subs_main_conf_t));
+    if (conf == NULL) {
+        return NULL;
+    }
+
+    return conf;
+}
+
+
+static void *
+ngx_http_subs_create_loc_conf(ngx_conf_t *cf)
 {
     ngx_http_subs_loc_conf_t  *conf;
 
     conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_subs_loc_conf_t));
     if (conf == NULL) {
-        return NGX_CONF_ERROR;
+        return NULL;
     }
 
     /*
@@ -1292,7 +1315,7 @@ ngx_http_subs_create_conf(ngx_conf_t *cf)
 
 
 static char *
-ngx_http_subs_merge_conf(ngx_conf_t *cf, void *parent, void *child)
+ngx_http_subs_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 {
     ngx_http_subs_loc_conf_t *prev = parent;
     ngx_http_subs_loc_conf_t *conf = child;
@@ -1333,6 +1356,9 @@ ngx_http_subs_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 static ngx_int_t
 ngx_http_subs_filter_init(ngx_conf_t *cf)
 {
+    ngx_http_subs_main_conf_t *main = ngx_http_conf_get_module_main_conf(cf, ngx_http_subs_filter_module);
+    if (!main->enable) return NGX_OK;
+
     ngx_http_next_header_filter = ngx_http_top_header_filter;
     ngx_http_top_header_filter = ngx_http_subs_header_filter;
 
