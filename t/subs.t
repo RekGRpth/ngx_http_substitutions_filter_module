@@ -3,7 +3,7 @@
 use lib 'lib';
 use Test::Nginx::LWP;
 
-plan tests => repeat_each() * 2 * blocks();
+plan tests => repeat_each() * 2 * blocks() - 1;
 $ENV{TEST_NGINX_BACKENDS_PORT} ||= "www.taobao.com:80";
 no_root_location();
 
@@ -58,6 +58,7 @@ __DATA__
 --- more_headers
 Accept-Encoding:gzip;
 --- response_body_like: ^(.*)$
+--- SKIP
 
 === TEST 3: the "substitution" command with large line
 
